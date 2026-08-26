@@ -306,3 +306,95 @@
     for(let i=0;i<6;i++) setTimeout(spawnPetal, i*900);
     setInterval(spawnPetal, 1400);
   }
+/* ---- Background Music Player ---- */
+(function() {
+  // เปลี่ยน URL ด้านล่างเป็นไฟล์เพลงของคุณ
+  const MUSIC_URL = 'assets/music/school-theme.mp3';
+  
+  // สร้าง audio element
+  const audio = new Audio(MUSIC_URL);
+  audio.loop = true;
+  audio.volume = 0.3; // ระดับเสียงเริ่มต้น
+  
+  // สร้างปุ่มควบคุมเพลง (ลอยมุมขวาล่าง)
+  const musicBtn = document.createElement('button');
+  musicBtn.id = 'musicToggle';
+  musicBtn.className = 'music-btn';
+  musicBtn.innerHTML = '🎵';
+  musicBtn.title = 'เปิด/ปิดเพลง';
+  document.body.appendChild(musicBtn);
+  
+  // เพิ่ม CSS สำหรับปุ่ม
+  const style = document.createElement('style');
+  style.textContent = `
+    .music-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 80px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--gold-soft);
+      border: 1px solid rgba(251,248,240,0.15);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(30,42,74,0.28);
+      z-index: 100;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .music-btn:hover {
+      background: var(--navy-deep);
+      transform: scale(1.1);
+    }
+    .music-btn.playing {
+      animation: music-pulse 2s ease infinite;
+    }
+    @keyframes music-pulse {
+      0%, 100% { box-shadow: 0 10px 24px rgba(30,42,74,0.28); }
+      50% { box-shadow: 0 10px 24px rgba(240,201,75,0.4); }
+    }
+    @media (max-width: 860px) {
+      .music-btn {
+        right: 14px;
+        bottom: 70px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // ฟังก์ชันเปิด/ปิดเพลง
+  let isPlaying = false;
+  
+  musicBtn.addEventListener('click', () => {
+    if (isPlaying) {
+      audio.pause();
+      musicBtn.classList.remove('playing');
+      musicBtn.innerHTML = '🎵';
+      musicBtn.title = 'เปิดเพลง';
+    } else {
+      audio.play().catch(() => {
+        showToast('ไม่สามารถเล่นเพลงได้ ลองกดอีกครั้ง');
+      });
+      musicBtn.classList.add('playing');
+      musicBtn.innerHTML = '⏸️';
+      musicBtn.title = 'ปิดเพลง';
+    }
+    isPlaying = !isPlaying;
+  });
+  
+  // แสดง toast เมื่อเพลงเริ่มเล่น
+  audio.addEventListener('play', () => {
+    showToast('🎵 กำลังเล่นเพลงประจำโรงเรียน');
+  });
+  
+  audio.addEventListener('pause', () => {
+    showToast('⏸️ หยุดเล่นเพลง');
+  });
+})();
