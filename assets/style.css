@@ -616,3 +616,59 @@ img.zoomable{cursor:zoom-in;}
 
 .navtoggle{transition:transform .2s ease;}
 .navtoggle.open{transform:rotate(90deg);}
+
+/* ---------- MAIN UNIFORM TABS ---------- */
+.main-tabs {
+  margin-bottom: 40px;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 12px;
+}
+
+.main-tabs .utab {
+  font-size: 0.95rem;
+  padding: 10px 20px;
+}
+
+.main-tabs .utab.on {
+  background: var(--navy);
+  color: var(--gold-soft);
+}
+
+/* ---------- SUB TABS (หญิง/ชาย) ---------- */
+.uniform-tabs .utab {
+  font-size: 0.78rem;
+  padding: 8px 14px;
+}
+
+/* ---------- PANEL LAYOUT ---------- */
+.upanel .uniform-layout {
+  margin-top: 20px;
+}
+
+/* ปรับ image wrap ให้เหมาะสมกับภาพ */
+.uniform-img-wrap img {
+  max-height: 480px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* ---------- JUNIOR UNIFORM SPECIAL ---------- */
+#junior-uniform .uniform-img-wrap {
+  background: linear-gradient(160deg, #f0f4ff 0%, #e6ecff 100%);
+}
+
+/* ---------- PE UNIFORM SPECIAL ---------- */
+#pe-uniform .uniform-img-wrap {
+  background: linear-gradient(160deg, #dbeafe 0%, #eff6ff 100%);
+}
+
+@media (max-width: 860px) {
+  .main-tabs {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .main-tabs .utab {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+  }
+}
