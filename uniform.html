@@ -7,6 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai+Looped:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  /* เอฟเฟกต์ Fade สลับรูปภาพแบบนุ่มนวล */
+  .uniform-img-wrap img {
+    transition: opacity 0.25s ease-in-out;
+  }
+</style>
 </head>
 <body>
 
@@ -40,7 +46,7 @@
     </div>
     <div class="uniform-layout">
       <div class="uniform-img-wrap reveal">
-        <img src="assets/uniform.png" alt="เครื่องแบบนักเรียนนาวาทิวัตถ์ มัธยมปลาย">
+        <img id="uniform-img" src="assets/uniform.png" alt="เครื่องแบบนักเรียนนาวาทิวัตถ์">
       </div>
       <div class="reveal">
         <div class="uniform-tabs">
@@ -48,15 +54,12 @@
           <div class="utab" data-tab="senior-boy">ม.ปลาย · ชาย</div>
           <div class="utab" data-tab="junior-girl">ม.ต้น · หญิง</div>
           <div class="utab" data-tab="junior-boy">ม.ต้น · ชาย</div>
-          <div class="utab" data-tab="pe-uniform">ชุดพละ</div>
+          <div class="utab" data-tab="pe-uniform">ชุดพละ / กิจกรรม</div>
           <div class="utab" data-tab="event-outfit">ชุดอีเว้นท์</div>
         </div>
 
         <div class="upanel on" id="senior-girl">
           <h4>ยูนิฟอร์มนักเรียนหญิง (ม.4–6)</h4>
-          <div class="uniform-img-wrap reveal">
-  <img id="uniform-img" src="assets/uniform.png" alt="เครื่องแบบนักเรียนนาวาทิวัตถ์">
-        </div>
           <ul>
             <li>เก็บชายเสื้อเข้าในกระโปรงให้เรียบร้อย</li>
             <li>กระโปรงลายสก็อต ปรับสั้น-ยาวได้ แต่ต้องไม่สั้นจนเห็นตัวซับในหรือต้นขา</li>
@@ -77,9 +80,6 @@
 
         <div class="upanel" id="junior-girl">
           <h4>ยูนิฟอร์มนักเรียนหญิง (ม.1–3)</h4>
-        <div class="uniform-img-wrap reveal">
-  <img id="uniform-img" src="assets/Middleschooler.png" alt="เครื่องแบบนักเรียนนาวาทิวัตถ์">
-        </div>
           <ul>
             <li>เสื้อในกระโปรงเอี๊ยม ไม่สามารถถอดออกได้ ปักสัญลักษณ์โรงเรียนตามแบบ</li>
             <li>ปรับความสั้น-ยาวของกระโปรงได้ แต่ห้ามเลยเหนือหัวเข่า</li>
@@ -98,40 +98,29 @@
           </ul>
         </div>
 
-        <!-- PLACEHOLDER CONTENT — แก้รายละเอียดชุดพละให้ตรงกับที่ออกแบบไว้จริง -->
         <div class="upanel" id="pe-uniform">
-          <h4>ชุดพละ</h4>
-        <div class="uniform-img-wrap reveal">
-  <img id="uniform-img" src="assets/activities.png" alt="เครื่องแบบนักเรียนนาวาทิวัตถ์">
-        </div>
+          <h4>ชุดพละ / กิจกรรม (Activities)</h4>
           <ul>
-            <li>เสื้อโปโล/เสื้อยืดสีประจำโรงเรียน ปักตราโรงเรียนที่อกซ้าย</li>
-            <li>กางเกงวอร์มขายาวหรือขาสั้นสีกรมท่า แถบเหลือง-ฟ้าข้างขา</li>
-            <li>รองเท้าผ้าใบสำหรับกิจกรรม</li>
+            <li>เสื้อปกโปโลสีฟ้าคราม ชายเสื้อแต่งลายสก็อต ปักตราโรงเรียนที่อกซ้ายและชื่อย่อ N.A.V ที่อกขวา</li>
+            <li>นักเรียนหญิง: ใส่คู่กับกระโปรงพลีทลายสก็อตสีฟ้า-เทา</li>
+            <li>นักเรียนชาย: ใส่คู่กับกางเกงวอร์มขายาวสีกรมท่า แต่งแถบฟ้าข้างขา</li>
+            <li>รองเท้าผ้าใบสีขาว พร้อมถุงเท้าสีขาวหรือสีเรียบ</li>
           </ul>
+        </div>
 
-
-        <!-- PLACEHOLDER CONTENT — แก้รายละเอียดชุดอีเว้นท์ให้ตรงกับที่ออกแบบไว้จริง -->
         <div class="upanel" id="event-outfit">
-          <h4>ชุดอีเว้นท์</h4>
-          <div class="uniform-img-wrap reveal">
-  <img id="uniform-img" src="assets/events.png" alt="เครื่องแบบนักเรียนนาวาทิวัตถ์">
-        </div>
+          <h4>ชุดอีเว้นท์ / กิจกรรมพิเศษ (Events)</h4>
           <ul>
-            <li>ชุดที่ใช้ในกิจกรรมพิเศษของโรงเรียน เช่น วันกีฬาสี หรืองานแสดงประจำปี</li>
-            <li>รายละเอียดสี/ลวดลายแตกต่างกันไปตามอีเว้นท์นั้น ๆ</li>
+            <li>ชุดสไตล์กลิ่นอายทหารเรือ (Sailor Uniform) สำหรับพิธีการและงานเทศกาลพิเศษ</li>
+            <li>นักเรียนหญิง: เสื้อทหารเรือสีกรมท่า สวมคู่กับกระโปรงเอวสูงสีขาวและหมวกเบเร่ต์กะลาสี</li>
+            <li>นักเรียนชาย: เสื้อทหารเรือสีขาว สวมคู่กับกางเกงขาสั้นสีกรมท่าและหมวกหม้อตาลกะลาสี</li>
+            <li>ประดับเข็มตราโรงเรียนที่อกเสื้อและบนหมวกกะลาสีอย่างเป็นทางการ</li>
           </ul>
-          <div class="note-box">เนื้อหาส่วนนี้เป็นข้อมูลตัวอย่าง รอรายละเอียดจริงจากทางโรงเรียน</div>
         </div>
-
-        <a class="ripple-btn" href="#" target="_blank" rel="noopener">
-          <span class="ripple-btn-label">📁 ดูภาพยูนิฟอร์มชัด ๆ</span>
-        </a>
       </div>
     </div>
   </div>
 </section>
-
 
 <footer>
   <div class="footer-inner">
@@ -162,7 +151,49 @@
   </div>
 </footer>
 
-
 <script src="assets/script.js"></script>
+
+<!-- สคริปต์สลับรูปภาพ dynamic ตามแท็บที่เลือก -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tabs = document.querySelectorAll('.utab');
+  const panels = document.querySelectorAll('.upanel');
+  const mainImage = document.getElementById('uniform-img');
+
+  // ตารางจับคู่แท็บกับรูปภาพ
+  const imageMap = {
+    'senior-girl': 'assets/uniform.png',
+    'senior-boy': 'assets/uniform.png',
+    'junior-girl': 'assets/Middleschooler.jpg',
+    'junior-boy': 'assets/Middleschooler.jpg',
+    'pe-uniform': 'assets/activities.jpg',
+    'event-outfit': 'assets/events.jpg'
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetTab = tab.getAttribute('data-tab');
+
+      // เปลี่ยนสถานะแท็บและเนื้อหา
+      tabs.forEach(t => t.classList.remove('on'));
+      panels.forEach(p => p.classList.remove('on'));
+
+      tab.classList.add('on');
+      const activePanel = document.getElementById(targetTab);
+      if (activePanel) activePanel.classList.add('on');
+
+      // เปลี่ยนรูปภาพพร้อมทำ Fade Transition
+      if (imageMap[targetTab] && mainImage) {
+        mainImage.style.opacity = '0';
+        setTimeout(() => {
+          mainImage.src = imageMap[targetTab];
+          mainImage.style.opacity = '1';
+        }, 150);
+      }
+    });
+  });
+});
+</script>
+
 </body>
 </html>

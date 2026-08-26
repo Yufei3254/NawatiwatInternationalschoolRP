@@ -672,3 +672,6 @@ img.zoomable{cursor:zoom-in;}
     padding: 8px 16px;
   }
 }
+.uniform-img-wrap img {
+  transition: opacity 0.25s ease-in-out;
+}
