@@ -309,7 +309,7 @@
 /* ---- Background Music Player ---- */
 (function() {
   // เปลี่ยน URL ด้านล่างเป็นไฟล์เพลงของคุณ
-  const MUSIC_URL = 'assets/music/school-theme.mp3';
+  const MUSIC_URL = 'assets/music/NAV school anthem.mp3';
   
   // สร้าง audio element
   const audio = new Audio(MUSIC_URL);
