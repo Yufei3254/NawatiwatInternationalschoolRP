@@ -306,95 +306,142 @@
     for(let i=0;i<6;i++) setTimeout(spawnPetal, i*900);
     setInterval(spawnPetal, 1400);
   }
-/* ---- Background Music Player ---- */
+/* ===================== MUSIC PLAYER (ใช้ไฟล์ NAV School athem.mp3) ===================== */
 (function() {
-  // เปลี่ยน URL ด้านล่างเป็นไฟล์เพลงของคุณ
-  const MUSIC_URL = 'assets/NAV school anthem.mp3';
+  // เปลี่ยน URL ตามชื่อไฟล์เพลงของคุณ
+  // ⚠️ ถ้าเปลี่ยนชื่อไฟล์เป็น assets/NAV-School-Anthem.mp3 ให้แก้บรรทัดนี้ด้วย
+  var MUSIC_URL = 'assets/NAV School athem.mp3';
   
-  // สร้าง audio element
-  const audio = new Audio(MUSIC_URL);
+  // สร้าง Audio element
+  var audio = new Audio(MUSIC_URL);
   audio.loop = true;
-  audio.volume = 0.3; // ระดับเสียงเริ่มต้น
+  audio.volume = 0.3;
+  audio.preload = 'auto';
+  // สำคัญมากสำหรับ iOS: ต้องตั้งค่าก่อน
+  audio.setAttribute('playsinline', '');
+  audio.setAttribute('webkit-playsinline', '');
   
-  // สร้างปุ่มควบคุมเพลง (ลอยมุมขวาล่าง)
-  const musicBtn = document.createElement('button');
-  musicBtn.id = 'musicToggle';
-  musicBtn.className = 'music-btn';
-  musicBtn.innerHTML = '🎵';
-  musicBtn.title = 'เปิด/ปิดเพลง';
-  document.body.appendChild(musicBtn);
+  // สร้างปุ่ม
+  var btn = document.createElement('button');
+  btn.id = 'musicToggle';
+  btn.className = 'music-btn';
+  btn.innerHTML = '🎵';
+  btn.title = 'เปิด/ปิดเพลง';
+  document.body.appendChild(btn);
   
-  // เพิ่ม CSS สำหรับปุ่ม
-  const style = document.createElement('style');
+  // เพิ่ม CSS
+  var style = document.createElement('style');
   style.textContent = `
     .music-btn {
       position: fixed;
-      right: 20px;
-      bottom: 80px;
-      width: 44px;
-      height: 44px;
+      right: 16px;
+      bottom: 70px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: var(--navy);
-      color: var(--gold-soft);
-      border: 1px solid rgba(251,248,240,0.15);
-      font-size: 1.2rem;
+      background: #1E2A4A;
+      color: #F7DE87;
+      border: 2px solid #F0C94B;
+      font-size: 1.4rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(30,42,74,0.28);
-      z-index: 100;
-      transition: transform 0.2s ease, background 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      z-index: 9999;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
     .music-btn:hover {
-      background: var(--navy-deep);
       transform: scale(1.1);
     }
     .music-btn.playing {
+      background: #F0C94B;
+      color: #1E2A4A;
+      border-color: #1E2A4A;
       animation: music-pulse 2s ease infinite;
     }
+    .music-btn.error {
+      background: #B23A3A;
+      color: #fff;
+      border-color: #B23A3A;
+    }
     @keyframes music-pulse {
-      0%, 100% { box-shadow: 0 10px 24px rgba(30,42,74,0.28); }
-      50% { box-shadow: 0 10px 24px rgba(240,201,75,0.4); }
+      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+      50% { box-shadow: 0 6px 25px rgba(240,201,75,0.6); }
     }
     @media (max-width: 860px) {
       .music-btn {
-        right: 14px;
-        bottom: 70px;
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        right: 12px;
+        bottom: 65px;
       }
     }
   `;
   document.head.appendChild(style);
   
-  // ฟังก์ชันเปิด/ปิดเพลง
-  let isPlaying = false;
+  // สถานะ
+  var isPlaying = false;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   
-  musicBtn.addEventListener('click', () => {
+  // ฟังก์ชันปลดล็อกเสียง (จำเป็นสำหรับ iOS)
+  function unlockAudio() {
+    // iOS ต้องมีการโต้ตอบจากผู้ใช้ก่อนถึงจะเล่นเสียงได้
+    // การเรียก audio.play() เองก็ถือว่าเป็นการโต้ตอบแล้ว
+  }
+  
+  // ฟังก์ชัน toggle
+  function toggleMusic() {
     if (isPlaying) {
       audio.pause();
-      musicBtn.classList.remove('playing');
-      musicBtn.innerHTML = '🎵';
-      musicBtn.title = 'เปิดเพลง';
+      btn.classList.remove('playing');
+      btn.innerHTML = '🎵';
+      btn.title = 'เปิดเพลง';
+      if (typeof showToast === 'function') showToast('หยุดเล่นเพลง');
     } else {
-      audio.play().catch(() => {
-        showToast('ไม่สามารถเล่นเพลงได้ ลองกดอีกครั้ง');
-      });
-      musicBtn.classList.add('playing');
-      musicBtn.innerHTML = '⏸️';
-      musicBtn.title = 'ปิดเพลง';
+      // ลองเล่น
+      var playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          btn.classList.add('playing');
+          btn.innerHTML = '⏸️';
+          btn.title = 'ปิดเพลง';
+          if (typeof showToast === 'function') showToast('กำลังเล่นเพลง');
+        }).catch(function(err) {
+          console.error('Music error:', err);
+          btn.classList.add('error');
+          btn.innerHTML = '❌';
+          if (typeof showToast === 'function') showToast('⚠️ ไม่สามารถเล่นเพลงได้');
+          
+          // ลองอีกครั้งหลังจาก 1 วินาที
+          setTimeout(function() {
+            btn.classList.remove('error');
+            btn.innerHTML = '🎵';
+          }, 2000);
+        });
+      }
     }
     isPlaying = !isPlaying;
+  }
+  
+  btn.addEventListener('click', toggleMusic);
+  
+  // แสดง toast เมื่อโหลดเพลงสำเร็จ
+  audio.addEventListener('canplaythrough', function() {
+    btn.classList.remove('error');
+    btn.innerHTML = '🎵';
   });
   
-  // แสดง toast เมื่อเพลงเริ่มเล่น
-  audio.addEventListener('play', () => {
-    showToast('🎵 กำลังเล่นเพลงประจำโรงเรียน');
+  audio.addEventListener('error', function() {
+    btn.classList.add('error');
+    btn.innerHTML = '❌';
+    btn.title = 'ไม่พบไฟล์เพลง';
+    if (typeof showToast === 'function') showToast('ไม่พบไฟล์เพลง');
   });
   
-  audio.addEventListener('pause', () => {
-    showToast('⏸️ หยุดเล่นเพลง');
-  });
+  // แสดง toast แนะนำเมื่อโหลดหน้า
+  setTimeout(function() {
+    if (typeof showToast === 'function') showToast('กดปุ่มเพลงมุมขวาล่างเพื่อเปิดเพลง');
+  }, 2000);
+  
 })();
