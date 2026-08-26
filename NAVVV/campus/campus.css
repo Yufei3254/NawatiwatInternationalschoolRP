@@ -1,0 +1,198 @@
+/* ===========================================================
+   3D Campus — styles scoped to this page only.
+   Reuses design tokens (--navy, --gold, --cream, etc.)
+   already defined in ../assets/style.css
+   =========================================================== */
+
+.campus-hero{
+  background:radial-gradient(ellipse at 20% -10%, #2c3c6b 0%, var(--navy) 45%, var(--navy-deep) 100%);
+  color:#fff;
+  padding:64px 32px 40px;
+}
+.campus-hero .eyebrow{color:var(--gold-soft);}
+.campus-hero h1{
+  color:#fff;
+  font-family:'IBM Plex Sans Thai Looped','IBM Plex Sans Thai',sans-serif;
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:700;
+  margin:8px 0 14px;
+}
+.campus-hero p{
+  max-width:640px;
+  color:rgba(251,248,240,0.82);
+  margin-bottom:22px;
+}
+.campus-hints{
+  display:flex;flex-wrap:wrap;gap:12px;
+}
+.campus-hints span{
+  font-size:0.78rem;font-weight:600;
+  background:rgba(251,248,240,0.08);
+  border:1px solid rgba(251,248,240,0.18);
+  padding:8px 14px;border-radius:999px;
+  color:rgba(251,248,240,0.85);
+}
+
+#campus-stage{
+  position:relative;
+  width:100%;
+  height:min(78vh, 720px);
+  min-height:420px;
+  background:linear-gradient(180deg,#cfe0ea 0%, #eef3ea 55%, #eef3ea 100%);
+  overflow:hidden;
+}
+
+#campus-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  touch-action:none;
+  cursor:grab;
+}
+#campus-canvas:active{cursor:grabbing;}
+#campus-canvas.hover-building{cursor:pointer;}
+
+/* CSS2D building labels (billboarded automatically by CSS2DRenderer) */
+#campus-labels{
+  position:absolute;inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.building-label{
+  font-family:'IBM Plex Sans Thai','IBM Plex Sans Thai Looped',sans-serif;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:0.01em;
+  color:var(--navy);
+  background:rgba(255,255,255,0.88);
+  border:1px solid rgba(30,42,74,0.18);
+  border-radius:5px;
+  padding:3px 7px;
+  white-space:nowrap;
+  transform:translate(-50%, -140%);
+  box-shadow:0 4px 10px rgba(30,42,74,0.12);
+}
+.building-label.major{
+  background:var(--navy);
+  color:var(--gold-soft);
+  border-color:var(--navy);
+  font-size:11.5px;
+  padding:4px 9px;
+}
+.building-label.hover-tip{
+  position:absolute;
+  transform:translate(-50%, -100%);
+  pointer-events:none;
+  z-index:5;
+}
+
+/* loading overlay */
+#loading-overlay{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#cfe0ea 0%, #eef3ea 55%, #eef3ea 100%);
+  z-index:20;
+  transition:opacity .5s ease, visibility .5s ease;
+}
+#loading-overlay.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.loading-box{
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  color:var(--navy);font-weight:600;font-size:0.85rem;
+}
+.loading-wheel{
+  width:40px;height:40px;border-radius:50%;
+  border:3px solid rgba(30,42,74,0.15);
+  border-top-color:var(--wheel-blue);
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-hint{
+  max-width:260px;text-align:center;
+  font-size:0.72rem;font-weight:500;color:#6b7385;
+  opacity:0;transition:opacity .4s ease;
+}
+.loading-hint.show{opacity:1;}
+.loading-hint code{
+  background:var(--paper);padding:1px 5px;border-radius:4px;
+  font-family:monospace;color:var(--navy);
+}
+
+
+/* info side panel */
+#info-panel{
+  position:absolute;
+  top:0;right:0;
+  width:min(320px, 84vw);
+  height:100%;
+  background:#fff;
+  border-left:1px solid var(--line);
+  box-shadow:-16px 0 30px rgba(30,42,74,0.12);
+  padding:26px 24px;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.2,.9,.3,1);
+  z-index:15;
+}
+#info-panel.open{transform:translateX(0);}
+#info-close{
+  position:absolute;top:16px;right:16px;
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid var(--line);background:#fff;
+  font-size:1.1rem;line-height:1;cursor:pointer;color:var(--navy);
+}
+#info-close:hover{background:var(--paper);}
+.info-eyebrow{
+  text-transform:uppercase;letter-spacing:0.18em;font-size:0.68rem;
+  font-weight:700;color:var(--wheel-blue);margin-bottom:8px;margin-top:14px;
+}
+#info-title{
+  font-family:'IBM Plex Sans Thai Looped','IBM Plex Sans Thai',sans-serif;
+  font-size:1.35rem;color:var(--navy);margin:0 0 12px;
+}
+#info-desc{color:#4a5273;font-size:0.9rem;line-height:1.7;}
+
+/* legend */
+#campus-legend{
+  position:absolute;left:16px;bottom:16px;
+  display:flex;flex-direction:column;gap:6px;
+  background:rgba(255,255,255,0.9);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:12px 14px;
+  font-size:0.72rem;font-weight:600;color:var(--navy);
+  z-index:10;
+}
+#campus-legend span{display:flex;align-items:center;gap:8px;}
+#campus-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+@media (max-width:860px){
+  #campus-stage{height:64vh;}
+  #info-panel{width:88vw;}
+  #campus-legend{font-size:0.66rem;padding:10px 12px;}
+  .campus-hints{gap:8px;}
+  .campus-hints span{font-size:0.72rem;padding:6px 10px;}
+}
+
+/* ---- campus map toolbar: reset view / fullscreen ---- */
+.campus-toolbar{
+  position:absolute;right:16px;bottom:16px;z-index:10;
+  display:flex;gap:8px;
+}
+.campus-tool-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.92);border:1px solid var(--line);
+  border-radius:8px;padding:9px 12px;
+  font-size:0.74rem;font-weight:700;color:var(--navy);cursor:pointer;
+  box-shadow:0 6px 14px rgba(30,42,74,0.12);
+  transition:transform .15s ease, border-color .2s ease, background .2s ease;
+}
+.campus-tool-btn:hover{border-color:var(--wheel-blue);}
+.campus-tool-btn:active{transform:scale(0.95);}
+.campus-tool-btn .icon{font-size:1rem;line-height:1;}
+
+@media (max-width:860px){
+  .campus-toolbar{right:10px;bottom:10px;flex-direction:column;}
+  .campus-tool-btn .label{display:none;}
+  .campus-tool-btn{padding:10px;border-radius:50%;}
+}
