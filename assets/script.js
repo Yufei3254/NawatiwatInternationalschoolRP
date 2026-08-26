@@ -306,6 +306,20 @@
     for(let i=0;i<6;i++) setTimeout(spawnPetal, i*900);
     setInterval(spawnPetal, 1400);
   }
+
+function showToast(message) {
+  var holder = document.getElementById('toastContainer');
+  if (!holder) return;
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = message;
+  holder.appendChild(t);
+  requestAnimationFrame(function() { t.classList.add('show'); });
+  setTimeout(function() {
+    t.classList.remove('show');
+    setTimeout(function() { t.remove(); }, 300);
+  }, 2200);
+}
 /* ===================== MUSIC PLAYER (ใช้ไฟล์ NAV School athem.mp3) ===================== */
 (function() {
   // เปลี่ยน URL ตามชื่อไฟล์เพลงของคุณ
