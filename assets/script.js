@@ -320,22 +320,26 @@ function showToast(message) {
     setTimeout(function() { t.remove(); }, 300);
   }, 2200);
 }
-/* ---------- 14. MUSIC PLAYER (เล่นต่อเนื่องทุกหน้า) ---------- */
+/* ---------- 14. MUSIC PLAYER (เล่นต่อเนื่องทุกหน้า - ใช้ localStorage) ---------- */
 (function() {
-  // ✅ แก้ให้ชี้ไปที่ assets/NAV-School-Anthem.mp3 โดยตรง
+  // ✅ ไฟล์เพลงอยู่ที่ assets/NAV-School-Anthem.mp3
   var MUSIC_URL = 'assets/NAV-School-Anthem.mp3';
   
-  // สร้าง Audio element
-  var audio = new Audio();
-  audio.loop = true;
-  audio.volume = 0.3;
-  audio.preload = 'auto';
+  // ✅ ใช้ Audio ที่แชร์กันทั้งเว็บ (ถ้ามีอยู่แล้วจากหน้าเดิม ก็ใช้ตัวเดิม)
+  if (!window._navAudio) {
+    window._navAudio = new Audio();
+    window._navAudio.loop = true;
+    window._navAudio.volume = 0.3;
+    window._navAudio.preload = 'auto';
+    window._navAudio.src = MUSIC_URL;
+    window._navAudio.load();
+  }
   
-  // สร้างปุ่ม
+  var audio = window._navAudio;
+  
+  // สร้างปุ่ม (จะสร้างใหม่ทุกหน้า แต่สถานะเพลงจะจำได้)
   var btn = document.createElement('button');
   btn.className = 'music-btn';
-  btn.innerHTML = '🎵';
-  btn.title = 'เปิด/ปิดเพลง';
   document.body.appendChild(btn);
   
   // CSS
@@ -365,9 +369,10 @@ function showToast(message) {
   `;
   document.head.appendChild(style);
   
+  // สถานะ
   var isPlaying = false;
   
-  // ฟังก์ชันอัปเดต UI ปุ่ม
+  // ฟังก์ชันอัปเดต UI
   function updateBtnUI() {
     if (isPlaying) {
       btn.classList.add('playing');
@@ -378,23 +383,17 @@ function showToast(message) {
     }
   }
   
-  // ฟังก์ชันเริ่มเล่นเพลง
+  // ฟังก์ชันเริ่มเล่น
   function startMusic() {
-    if (!audio.src) {
-      audio.src = MUSIC_URL;
-      audio.load();
-    }
-    
     audio.play().then(function() {
       isPlaying = true;
-      // บันทึกสถานะลง sessionStorage
-      sessionStorage.setItem('navMusicPlaying', 'true');
+      localStorage.setItem('navMusicPlaying', 'true');
       updateBtnUI();
     }).catch(function(err) {
       console.error('Music Error:', err);
       btn.classList.add('error');
       btn.innerHTML = '❌';
-      sessionStorage.removeItem('navMusicPlaying');
+      localStorage.removeItem('navMusicPlaying');
       setTimeout(function() {
         btn.classList.remove('error');
         updateBtnUI();
@@ -402,11 +401,11 @@ function showToast(message) {
     });
   }
   
-  // ฟังก์ชันหยุดเพลง
+  // ฟังก์ชันหยุด
   function stopMusic() {
     audio.pause();
     isPlaying = false;
-    sessionStorage.removeItem('navMusicPlaying');
+    localStorage.removeItem('navMusicPlaying');
     updateBtnUI();
   }
   
@@ -421,23 +420,41 @@ function showToast(message) {
   
   btn.addEventListener('click', toggleMusic);
   
-  // โหลดเพลงล่วงหน้า
-  audio.src = MUSIC_URL;
-  audio.load();
-  
-  // ✅ ตรวจสอบ sessionStorage: ถ้าเคยเปิดเพลงไว้ ให้เล่นต่อทันที
-  var shouldAutoPlay = sessionStorage.getItem('navMusicPlaying') === 'true';
+  // ✅ ตรวจสอบ localStorage: ถ้าเคยเปิดเพลงไว้ ให้เล่นต่อทันที
+  var shouldAutoPlay = localStorage.getItem('navMusicPlaying') === 'true';
   
   if (shouldAutoPlay) {
-    // เล่นต่อจากหน้าที่แล้ว
-    startMusic();
+    isPlaying = true;
+    // ลองเล่นต่อ
+    audio.play().then(function() {
+      updateBtnUI();
+    }).catch(function() {
+      // ถ้าเล่นไม่ได้ (เช่น เบราว์เซอร์บล็อก) ให้อัปเดต UI
+      isPlaying = false;
+      localStorage.removeItem('navMusicPlaying');
+      updateBtnUI();
+    });
+  } else {
+    updateBtnUI();
   }
   
-  // แสดงข้อความแนะนำ (เฉพาะครั้งแรกที่เข้ามา)
-  if (!sessionStorage.getItem('navMusicHintShown')) {
+  // แสดงข้อความแนะนำ (เฉพาะครั้งแรก)
+  if (!localStorage.getItem('navMusicHintShown')) {
     setTimeout(function() {
-      showToast('กดปุ่มเพลงเพื่อเริ่มฟัง');
-      sessionStorage.setItem('navMusicHintShown', 'true');
+      showToast('🎵 กดปุ่มเพลงเพื่อเริ่มฟัง');
+      localStorage.setItem('navMusicHintShown', 'true');
     }, 2000);
   }
+  
+  // ✅ ฟัง event เมื่อเพลงหยุดโดยไม่ตั้งใจ (เช่น เบราว์เซอร์ pause)
+  audio.addEventListener('pause', function() {
+    if (!audio.ended) {
+      // ถ้าไม่ใช่การหยุดโดยผู้ใช้ ให้อัปเดต UI
+      if (!btn.classList.contains('playing')) return;
+      isPlaying = false;
+      localStorage.removeItem('navMusicPlaying');
+      updateBtnUI();
+    }
+  });
+  
 })();
