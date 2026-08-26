@@ -458,3 +458,38 @@ function showToast(message) {
   });
   
 })();
+
+// data tab //
+document.addEventListener('DOMContentLoaded', () => {
+  const tabs = document.querySelectorAll('.utab');
+  const panels = document.querySelectorAll('.upanel');
+  const mainImage = document.getElementById('uniform-img');
+
+  // จับคู่ data-tab กับชื่อไฟล์รูปภาพ
+  const imageMap = {
+    'senior-girl': 'assets/uniform.png',
+    'senior-boy': 'assets/uniform.png',
+    'junior-girl': 'assets/Middleschooler.jpg',
+    'junior-boy': 'assets/Middleschooler.jpg',
+    'pe-uniform': 'assets/activities.jpg',
+    'event-outfit': 'assets/events.jpg'
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetTab = tab.getAttribute('data-tab');
+
+      // 1. เปลี่ยน Active Class ของ แท็บ และ แผงเนื้อหา
+      tabs.forEach(t => t.classList.remove('on'));
+      panels.forEach(p => p.classList.remove('on'));
+
+      tab.classList.add('on');
+      document.getElementById(targetTab)?.classList.add('on');
+
+      // 2. เปลี่ยนรูปภาพตามแท็บที่กด
+      if (imageMap[targetTab] && mainImage) {
+        mainImage.src = imageMap[targetTab];
+      }
+    });
+  });
+});
