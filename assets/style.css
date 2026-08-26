@@ -620,51 +620,23 @@ img.zoomable{cursor:zoom-in;}
 /* ---------- MAIN UNIFORM TABS ---------- */
 .main-tabs {
   margin-bottom: 40px;
-  border-bottom: 2px solid rgba(30,42,74,0.15);
-  padding-bottom: 12px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+
 }
 
 .main-tabs .utab {
   font-size: 0.95rem;
   padding: 10px 20px;
-  border: 1px solid rgba(30,42,74,0.15);
-  border-radius: 999px;
-  background: #fff;
-  color: #232840;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
 
-.main-tabs .utab:hover {
-  border-color: #7C93D9;
-}
-
-.main-tabs .utab.on {
-  background: #1E2A4A;
-  color: #F7DE87;
-  border-color: #1E2A4A;
-}
-
-/* ปรับภาพให้พอดี */
 .uniform-img-wrap img {
   max-height: 480px;
   object-fit: contain;
   border-radius: 10px;
 }
 
-/* ไฮไลท์สีพื้นหลังตามประเภทชุด */
-#pe-uniform .uniform-img-wrap {
-  background: linear-gradient(160deg, #dbeafe 0%, #eff6ff 100%);
-}
 
 #junior-uniform .uniform-img-wrap {
   background: linear-gradient(160deg, #f0f4ff 0%, #e6ecff 100%);
 }
 
-#senior-uniform .uniform-img-wrap {
-  background: linear-gradient(160deg, #fff5e6 0%, #fffaf0 100%);
+
 }
