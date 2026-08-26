@@ -1,15 +1,39 @@
-// Navatiwat International School — shared site behaviour
-// Used across all pages; each block checks for its elements before running.
-// Works with mouse AND touch throughout.
-
-  document.querySelectorAll('.utab').forEach(tab=>{
-    tab.addEventListener('click', ()=>{
-      document.querySelectorAll('.utab').forEach(t=>t.classList.remove('on'));
-      document.querySelectorAll('.upanel').forEach(p=>p.classList.remove('on'));
-      tab.classList.add('on');
-      document.getElementById(tab.dataset.tab).classList.add('on');
-    });
+// ใช้โค้ดนี้แทนส่วนเดิม (ประมาณบรรทัด 1-10 ของไฟล์ script.js)
+document.querySelectorAll('.utab').forEach(tab => {
+  tab.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation(); // หยุดการ event ไหลไปยัง parent
+    
+    // หา parent container ของแท็บนี้ (ไม่ว่าจะเป็น main-tabs หรือ uniform-tabs)
+    const parent = this.closest('.uniform-tabs') || this.parentElement;
+    
+    // ล้าง active จากแท็บในกลุ่มเดียวกัน
+    parent.querySelectorAll('.utab').forEach(t => t.classList.remove('on'));
+    this.classList.add('on');
+    
+    // หา target panel
+    const targetId = this.dataset.tab;
+    const targetPanel = document.getElementById(targetId);
+    
+    if (targetPanel) {
+      // ถ้าเป็นแท็บหลัก (main-tabs) ให้ซ่อนทุก upanel ใน section แล้วแสดงเฉพาะ target
+      if (parent.classList.contains('main-tabs')) {
+        const section = this.closest('section');
+        section.querySelectorAll('.upanel').forEach(p => p.classList.remove('on'));
+        targetPanel.classList.add('on');
+      } 
+      // ถ้าเป็นแท็บย่อย (หญิง/ชาย) ให้ซ่อนเฉพาะพี่น้องในกลุ่มเดียวกัน
+      else {
+        // หา parent ของ upanel (คือ div.uniform-layout > div:last-child)
+        const panelParent = targetPanel.closest('.uniform-layout');
+        if (panelParent) {
+          panelParent.querySelectorAll('.upanel').forEach(p => p.classList.remove('on'));
+        }
+        targetPanel.classList.add('on');
+      }
+    }
   });
+});
 
   /* ---- swipe left/right between uniform tabs on touch devices ---- */
   (function(){
