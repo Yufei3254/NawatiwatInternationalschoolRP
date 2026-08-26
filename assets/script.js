@@ -324,7 +324,7 @@ function showToast(message) {
 (function() {
   // เปลี่ยน URL ตามชื่อไฟล์เพลงของคุณ
   // ⚠️ ถ้าเปลี่ยนชื่อไฟล์เป็น assets/NAV-School-Anthem.mp3 ให้แก้บรรทัดนี้ด้วย
-  var MUSIC_URL = 'assets/NAV School athem.mp3';
+  var MUSIC_URL = 'assets/NAV-school-anthem.mp3';
   
   // สร้าง Audio element
   var audio = new Audio(MUSIC_URL);
