@@ -320,30 +320,25 @@ function showToast(message) {
     setTimeout(function() { t.remove(); }, 300);
   }, 2200);
 }
-/* ===================== MUSIC PLAYER (ใช้ไฟล์ NAV School athem.mp3) ===================== */
+/* ---------- 14. MUSIC PLAYER (เล่นต่อเนื่องทุกหน้า) ---------- */
 (function() {
-  // เปลี่ยน URL ตามชื่อไฟล์เพลงของคุณ
-  // ⚠️ ถ้าเปลี่ยนชื่อไฟล์เป็น assets/NAV-School-Anthem.mp3 ให้แก้บรรทัดนี้ด้วย
-  var MUSIC_URL = 'assets/NAV-school-anthem.mp3';
+  // ✅ แก้ให้ชี้ไปที่ assets/NAV-School-Anthem.mp3 โดยตรง
+  var MUSIC_URL = 'assets/NAV-School-Anthem.mp3';
   
   // สร้าง Audio element
-  var audio = new Audio(MUSIC_URL);
+  var audio = new Audio();
   audio.loop = true;
   audio.volume = 0.3;
   audio.preload = 'auto';
-  // สำคัญมากสำหรับ iOS: ต้องตั้งค่าก่อน
-  audio.setAttribute('playsinline', '');
-  audio.setAttribute('webkit-playsinline', '');
   
   // สร้างปุ่ม
   var btn = document.createElement('button');
-  btn.id = 'musicToggle';
   btn.className = 'music-btn';
   btn.innerHTML = '🎵';
   btn.title = 'เปิด/ปิดเพลง';
   document.body.appendChild(btn);
   
-  // เพิ่ม CSS
+  // CSS
   var style = document.createElement('style');
   style.textContent = `
     .music-btn {
@@ -358,104 +353,91 @@ function showToast(message) {
       border: 2px solid #F0C94B;
       font-size: 1.4rem;
       cursor: pointer;
+      z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-      z-index: 9999;
-      transition: all 0.3s ease;
       -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
     }
-    .music-btn:hover {
-      transform: scale(1.1);
-    }
-    .music-btn.playing {
-      background: #F0C94B;
-      color: #1E2A4A;
-      border-color: #1E2A4A;
-      animation: music-pulse 2s ease infinite;
-    }
-    .music-btn.error {
-      background: #B23A3A;
-      color: #fff;
-      border-color: #B23A3A;
-    }
-    @keyframes music-pulse {
-      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-      50% { box-shadow: 0 6px 25px rgba(240,201,75,0.6); }
-    }
-    @media (max-width: 860px) {
-      .music-btn {
-        right: 12px;
-        bottom: 65px;
-      }
-    }
+    .music-btn.playing { background: #F0C94B; color: #1E2A4A; }
+    .music-btn.error { background: #B23A3A; color: #fff; }
   `;
   document.head.appendChild(style);
   
-  // สถานะ
   var isPlaying = false;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   
-  // ฟังก์ชันปลดล็อกเสียง (จำเป็นสำหรับ iOS)
-  function unlockAudio() {
-    // iOS ต้องมีการโต้ตอบจากผู้ใช้ก่อนถึงจะเล่นเสียงได้
-    // การเรียก audio.play() เองก็ถือว่าเป็นการโต้ตอบแล้ว
+  // ฟังก์ชันอัปเดต UI ปุ่ม
+  function updateBtnUI() {
+    if (isPlaying) {
+      btn.classList.add('playing');
+      btn.innerHTML = '⏸️';
+    } else {
+      btn.classList.remove('playing');
+      btn.innerHTML = '🎵';
+    }
+  }
+  
+  // ฟังก์ชันเริ่มเล่นเพลง
+  function startMusic() {
+    if (!audio.src) {
+      audio.src = MUSIC_URL;
+      audio.load();
+    }
+    
+    audio.play().then(function() {
+      isPlaying = true;
+      // บันทึกสถานะลง sessionStorage
+      sessionStorage.setItem('navMusicPlaying', 'true');
+      updateBtnUI();
+    }).catch(function(err) {
+      console.error('Music Error:', err);
+      btn.classList.add('error');
+      btn.innerHTML = '❌';
+      sessionStorage.removeItem('navMusicPlaying');
+      setTimeout(function() {
+        btn.classList.remove('error');
+        updateBtnUI();
+      }, 2000);
+    });
+  }
+  
+  // ฟังก์ชันหยุดเพลง
+  function stopMusic() {
+    audio.pause();
+    isPlaying = false;
+    sessionStorage.removeItem('navMusicPlaying');
+    updateBtnUI();
   }
   
   // ฟังก์ชัน toggle
   function toggleMusic() {
     if (isPlaying) {
-      audio.pause();
-      btn.classList.remove('playing');
-      btn.innerHTML = '🎵';
-      btn.title = 'เปิดเพลง';
-      if (typeof showToast === 'function') showToast('หยุดเล่นเพลง');
+      stopMusic();
     } else {
-      // ลองเล่น
-      var playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.then(function() {
-          btn.classList.add('playing');
-          btn.innerHTML = '⏸️';
-          btn.title = 'ปิดเพลง';
-          if (typeof showToast === 'function') showToast('กำลังเล่นเพลง');
-        }).catch(function(err) {
-          console.error('Music error:', err);
-          btn.classList.add('error');
-          btn.innerHTML = '❌';
-          if (typeof showToast === 'function') showToast('⚠️ ไม่สามารถเล่นเพลงได้');
-          
-          // ลองอีกครั้งหลังจาก 1 วินาที
-          setTimeout(function() {
-            btn.classList.remove('error');
-            btn.innerHTML = '🎵';
-          }, 2000);
-        });
-      }
+      startMusic();
     }
-    isPlaying = !isPlaying;
   }
   
   btn.addEventListener('click', toggleMusic);
   
-  // แสดง toast เมื่อโหลดเพลงสำเร็จ
-  audio.addEventListener('canplaythrough', function() {
-    btn.classList.remove('error');
-    btn.innerHTML = '🎵';
-  });
+  // โหลดเพลงล่วงหน้า
+  audio.src = MUSIC_URL;
+  audio.load();
   
-  audio.addEventListener('error', function() {
-    btn.classList.add('error');
-    btn.innerHTML = '❌';
-    btn.title = 'ไม่พบไฟล์เพลง';
-    if (typeof showToast === 'function') showToast('ไม่พบไฟล์เพลง');
-  });
+  // ✅ ตรวจสอบ sessionStorage: ถ้าเคยเปิดเพลงไว้ ให้เล่นต่อทันที
+  var shouldAutoPlay = sessionStorage.getItem('navMusicPlaying') === 'true';
   
-  // แสดง toast แนะนำเมื่อโหลดหน้า
-  setTimeout(function() {
-    if (typeof showToast === 'function') showToast('กดปุ่มเพลงมุมขวาล่างเพื่อเปิดเพลง');
-  }, 2000);
+  if (shouldAutoPlay) {
+    // เล่นต่อจากหน้าที่แล้ว
+    startMusic();
+  }
   
+  // แสดงข้อความแนะนำ (เฉพาะครั้งแรกที่เข้ามา)
+  if (!sessionStorage.getItem('navMusicHintShown')) {
+    setTimeout(function() {
+      showToast('กดปุ่มเพลงเพื่อเริ่มฟัง');
+      sessionStorage.setItem('navMusicHintShown', 'true');
+    }, 2000);
+  }
 })();
