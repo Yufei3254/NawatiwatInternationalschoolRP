@@ -8,8 +8,8 @@
    =========================================================== */
 
 import * as THREE from 'three';
-import { OrbitControls } from './vendor/three/examples/jsm/controls/OrbitControls.js';
-import { CSS2DRenderer, CSS2DObject } from './vendor/three/examples/jsm/renderers/CSS2DRenderer.js';
+import { OrbitControls } from './vendor/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from './vendor/CSS2DRenderer.js';
 
 /* -----------------------------------------------------------
    1. Block data — x/y are % positions taken straight from the

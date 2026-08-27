@@ -14,9 +14,9 @@
    =========================================================== */
 (function () {
   var VENDOR_FILES = [
-    'vendor/three/build/three.module.min.js',
-    'vendor/three/examples/jsm/controls/OrbitControls.js',
-    'vendor/three/examples/jsm/renderers/CSS2DRenderer.js',
+    'vendor/three.module.min.js',
+    'vendor/OrbitControls.js',
+    'vendor/CSS2DRenderer.js',
     'campus.js'
   ];
 
@@ -30,20 +30,41 @@
   }
 
   function bootModule() {
-    var im = document.createElement('script');
-    im.type = 'importmap';
-    im.textContent = JSON.stringify({ imports: { three: './vendor/three/build/three.module.min.js' } });
-    document.body.appendChild(im);
-
     var mod = document.createElement('script');
     mod.type = 'module';
     mod.src = 'campus.js';
+    mod.onerror = function () {
+      if (loadingHint) {
+        loadingHint.classList.add('show');
+        loadingHint.innerHTML = 'โหลด campus.js ไม่สำเร็จ (404 หรือไฟล์เสีย) — ลองเช็คว่าอัปโหลดไฟล์ครบและ path ถูกต้องหรือไม่';
+      }
+      if (loadingText) loadingText.textContent = 'โหลดแผนที่ 3 มิติไม่สำเร็จ';
+    };
     document.body.appendChild(mod);
+
+    // Watchdog: campus.js is expected to hide #loading-overlay once
+    // the scene is built. If that hasn't happened a few seconds
+    // after the module was handed off, something failed silently
+    // (e.g. a runtime error inside campus.js) — surface a message
+    // instead of leaving the spinner stuck forever with no clue.
+    setTimeout(function () {
+      var overlay = document.getElementById('loading-overlay');
+      if (overlay && !overlay.classList.contains('hide')) {
+        if (loadingText) loadingText.textContent = 'การโหลดค้างอยู่นานผิดปกติ';
+        if (loadingHint) {
+          loadingHint.classList.add('show');
+          loadingHint.innerHTML = 'ไฟล์โหลดครบแล้วแต่ฉาก 3 มิติยังไม่ขึ้น — ลองเปิด Console (F12) ดู error สีแดง แล้วส่งข้อความนั้นมาให้เช็คได้';
+        }
+      }
+    }, 6000);
   }
 
-  // Old-browser / no-streaming fallback: skip straight to a normal
-  // (no-progress) module load rather than risk breaking the map.
-  if (!window.fetch || !window.ReadableStream || !Response.prototype.body) {
+  // Old-browser fallback: skip straight to a normal (no-progress)
+  // module load rather than risk breaking the map. (Deliberately
+  // NOT checking Response.prototype.body here — accessing that
+  // getter on the bare prototype, rather than a real Response
+  // instance, throws "Illegal invocation" in some engines.)
+  if (!window.fetch || !window.ReadableStream) {
     bootModule();
     return;
   }
