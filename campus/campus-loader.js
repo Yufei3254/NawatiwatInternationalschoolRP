@@ -40,7 +40,15 @@
       }
       if (loadingText) loadingText.textContent = 'โหลดแผนที่ 3 มิติไม่สำเร็จ';
     };
-    document.body.appendChild(mod);
+    var target = document.body || document.head;
+    if (target) {
+      target.appendChild(mod);
+    } else {
+      // If this script runs before <body> exists, wait for DOMContentLoaded.
+      window.addEventListener('DOMContentLoaded', function () {
+        (document.body || document.head).appendChild(mod);
+      }, { once: true });
+    }
 
     // Watchdog: campus.js is expected to hide #loading-overlay once
     // the scene is built. If that hasn't happened a few seconds
