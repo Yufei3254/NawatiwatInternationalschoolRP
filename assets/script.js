@@ -312,3 +312,36 @@
     for(let i=0;i<6;i++) setTimeout(spawnPetal, i*900);
     setInterval(spawnPetal, 1400);
   }
+
+  // เช็คว่าเคยกดยอมรับไปแล้วหรือยัง (จำไว้ 1 วัน)
+
+  window.addEventListener('DOMContentLoaded', function() {
+
+    var accepted = localStorage.getItem('siteAgreed');
+
+    var popup = document.getElementById('agreePopup');
+
+
+    if (accepted) {
+
+      popup.style.display = 'none';
+
+    } else {
+
+      document.body.classList.add('popup-active');
+
+    }
+
+
+    document.getElementById('agreeBtn').addEventListener('click', function() {
+
+      localStorage.setItem('siteAgreed', 'true');
+
+      popup.style.display = 'none';
+
+      document.body.classList.remove('popup-active');
+
+    });
+
+  });
+
