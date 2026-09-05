@@ -626,19 +626,16 @@ img.zoomable{cursor:zoom-in;}
 }
 
 .rule-card .rule-body{
-  display:grid;
-  grid-template-rows:1fr;
   overflow:hidden;
-  transition:grid-template-rows .3s ease, opacity .3s ease;
+  max-height:2000px;
   opacity:1;
-}
-.rule-card .rule-body > *{
-  min-height:0;
+  transition:max-height .35s ease, opacity .3s ease, margin-top .3s ease;
 }
 
 .rule-card.collapsed .rule-body{
-  grid-template-rows:0fr;
+  max-height:0;
   opacity:0;
+  margin-top:0;
 }
 
 .rule-toggle .chev{
