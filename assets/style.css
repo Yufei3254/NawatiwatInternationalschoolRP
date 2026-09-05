@@ -616,3 +616,35 @@ img.zoomable{cursor:zoom-in;}
 
 .navtoggle{transition:transform .2s ease;}
 .navtoggle.open{transform:rotate(90deg);}
+
+.rule-toggle{
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:0;
+}
+
+.rule-card .rule-body{
+  display:grid;
+  grid-template-rows:1fr;
+  overflow:hidden;
+  transition:grid-template-rows .3s ease, opacity .3s ease;
+  opacity:1;
+}
+.rule-card .rule-body > *{
+  min-height:0;
+}
+
+.rule-card.collapsed .rule-body{
+  grid-template-rows:0fr;
+  opacity:0;
+}
+
+.rule-toggle .chev{
+  display:inline-block;
+  transition:transform .25s ease;
+}
+.rule-card.collapsed .rule-toggle .chev{
+  transform:rotate(-90deg);
+}
